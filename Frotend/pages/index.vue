@@ -11,7 +11,7 @@
         </label>
         <div>
             <!-- Botón de búsqueda por voz -->
-            <button class="btn mx-2 rounded-full" @click="startVoiceSearch">
+            <button class="btn mx-2 rounded-full btn-neutral" @click="startVoiceSearch">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-mic"
                     viewBox="0 0 16 16">
                     <path
@@ -35,7 +35,6 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
 
 const transcript = ref('');
 const datos = ref([
@@ -102,8 +101,11 @@ const startVoiceSearch = () => {
     };
 
     recognition.onresult = (event) => {
-        transcript.value = event.results[0][0].transcript.toLowerCase();
-        console.log(`Transcripción: ${transcript.value}`);
+        let result = event.results[0][0].transcript.toLowerCase();
+    if (result.endsWith('.')) {
+        result = result.slice(0, -1); // Elimina el último carácter si es un punto
+    }
+    transcript.value = result;
     };
     recognition.onerror = (event) => {
         console.error('Error de reconocimiento de voz:', event.error);
